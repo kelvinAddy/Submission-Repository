@@ -1,122 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const Anecdote = ({ anecdotes, votes, selected }) => {
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
     </>
-  )
-}
+  );
+};
 
-export default App
+const HighestVoteAnecdote = ({ anecdotes, votes, selected }) => {
+  const votesMax = votes.reduce(
+    (accum, currentVal) => Math.max(accum, currentVal),
+    -Infinity,
+  );
+  const selectedMax = votes.indexOf(votesMax);
+  return (
+    <Anecdote anecdotes={anecdotes} votes={votes} selected={selectedMax} />
+  );
+};
+
+const App = () => {
+  const anecdotes = [
+    "If it hurts, do it more often.",
+    "Adding manpower to a late software project makes it later!",
+    "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+    "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+    "Premature optimization is the root of all evil.",
+    "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+    "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
+    "The only way to go fast, is to go well.",
+  ];
+
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+  // const [voteAlt, setVoteAlt] = useState(createVoteObject());
+
+  const getRandomNumber = () => Math.trunc(Math.random() * anecdotes.length);
+  const updateSelected = () => {
+    setSelected((prev) => getRandomNumber());
+  };
+
+  const handleVotes = () => {
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
+  };
+
+  // const handleVoteAltway = () => {
+  //   const copy = { ...voteAlt };
+  //   copy[selected] += 1;
+  //   setVoteAlt(copy);
+  // };
+
+  // function createVoteObject() {
+  //   const voteObj = {};
+  //   for (let i = 0; i < anecdotes.length; i++) {
+  //     voteObj[i] = 0;
+  //   }
+  //   return voteObj;
+  // }
+
+  // console.log(voteAlt);
+
+  return (
+    <div>
+      <h1>Anecdote of the day</h1>
+      <Anecdote anecdotes={anecdotes} votes={votes} selected={selected} />
+      <button onClick={handleVotes}>vote</button>
+      <button onClick={updateSelected}>next anecdote</button>
+      <h1>Anecdote with the most votes</h1>
+      <HighestVoteAnecdote
+        anecdotes={anecdotes}
+        votes={votes}
+        selected={selected}
+      />
+    </div>
+  );
+};
+
+export default App;
