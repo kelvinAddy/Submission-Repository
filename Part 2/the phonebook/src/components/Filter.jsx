@@ -1,7 +1,7 @@
-const Filter = ({ query, handleSearch }) => {
+const Filter = ({ query, updateQuery }) => {
   return (
     <div>
-      filter shown with <input value={query} onChange={handleSearch} />
+      filter shown with <input value={query} onChange={updateQuery} />
     </div>
   );
 };
