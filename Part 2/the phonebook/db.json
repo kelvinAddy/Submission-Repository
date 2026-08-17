@@ -1,19 +1,39 @@
 {
   "persons": [
     {
-      "name": "Russel Hibbebler",
-      "number": "98798781231",
-      "id": "Xxf0jrr0jKo"
+      "name": "addy kelvin",
+      "number": "12341234",
+      "id": "NOI5B7diAxA"
     },
     {
-      "name": "Jonas Dexter",
-      "number": "123132",
-      "id": "QWaauUDKTTY"
+      "name": "rer",
+      "number": "324234",
+      "id": "XuFHXrmhaZs"
     },
     {
-      "name": "Xerus nexus",
-      "number": "123123123",
-      "id": "2B7kguNf4sk"
+      "name": "tretre",
+      "number": "23423",
+      "id": "5Xid9C-ot7U"
+    },
+    {
+      "name": "ewrer",
+      "number": "werw",
+      "id": "2ND7t_BDpXI"
+    },
+    {
+      "name": "sdfsdf",
+      "number": "123123",
+      "id": "jeCD2cq-IZk"
+    },
+    {
+      "name": "12312",
+      "number": "sdfsd",
+      "id": "aMcs4ctkUdg"
+    },
+    {
+      "name": "kelvin",
+      "number": "123123",
+      "id": "vUGWmbHa0uI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
