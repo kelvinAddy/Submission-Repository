@@ -1,8 +1,15 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
 
 app.use(express.json());
+
+morgan.token("body", function getBody(req) {
+  return JSON.stringify(req.body);
+});
+
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
 let phoneBook = [
   {
@@ -78,6 +85,10 @@ app.post("/api/persons", (req, res) => {
   const newBody = { ...body, id: generateId() };
   phoneBook = [...phoneBook, newBody];
   res.json(newBody);
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({ error: "Error was encountered" });
 });
 
 app.listen(PORT, () => {
