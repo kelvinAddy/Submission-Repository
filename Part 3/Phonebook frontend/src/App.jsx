@@ -24,52 +24,71 @@ const App = () => {
   });
 
   useEffect(() => {
-    (async () => {
-      const data = await updatePhoneBook.getContacts();
-      setPersons(data);
-    })();
+    updatePhoneBook.getContacts().then((data) => setPersons(data));
   }, []);
 
   const updateNotification = (updater) => {
     updater();
     setTimeout(() => {
       setMessage(null);
+      setStyle({ ...style, color: "green" });
     }, 3000);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const nameExists = persons.find((person) => person.name.toLowerCase() === name.toLowerCase());
+    const nameFound = persons.find((person) => person.name.toLowerCase() === name.toLowerCase());
 
-    if (nameExists) {
-      const numberOfUser = nameExists.number;
-      if (numberOfUser !== number) {
-        if (window.confirm(`${name} is already added to phonebook, replace the old number with the new one?`)) {
-          (async () => {
-            const currentContactUpdated = { ...nameExists, number: number };
-            const data = await updatePhoneBook.updateContact(currentContactUpdated.id, currentContactUpdated);
-            setPersons(persons.map((person) => (person.id === data.id ? data : person)));
-            updateNotification(() => {
-              setMessage(`The phone number of ${data.name} was changed`);
-            });
-          })();
-        }
+    if (nameFound) {
+      if (nameFound.number !== number) {
+        const shouldUpdateOccur = window.confirm(`${name} is already added to phonebook, replace the old number with the new one?`);
+        if (shouldUpdateOccur) updateCreatedPerson(nameFound);
       } else alert(`${name} with phone number: ${number} already exists`);
-    } else {
-      const copynameObj = {
-        name: name,
-        number: number,
-      };
-      (async () => {
-        const data = await updatePhoneBook.addContact(copynameObj);
+    } else createPerson();
+  };
+
+  const updateCreatedPerson = (nameFound) => {
+    const currentContactUpdated = { ...nameFound, number: number };
+
+    updatePhoneBook
+      .updateContact(currentContactUpdated.id, currentContactUpdated)
+      .then((data) => {
+        setPersons(persons.map((person) => (person.id === data.id ? data : person)));
+        updateNotification(() => {
+          setMessage(`The phone number of ${data.name} was changed`);
+        });
+      })
+      .catch((error) => {
+        console.log("I RUN");
+        updateNotification(() => {
+          setStyle({ ...style, color: "red" });
+          setMessage(error.response.data.error);
+        });
+      });
+  };
+
+  const createPerson = () => {
+    const copynameObj = {
+      name: name,
+      number: number,
+    };
+
+    updatePhoneBook
+      .addContact(copynameObj)
+      .then((data) => {
         setPersons([...persons, data]);
         setName("");
         setNumber("");
         updateNotification(() => {
           setMessage(`Added ${data.name}`);
         });
-      })();
-    }
+      })
+      .catch((error) => {
+        updateNotification(() => {
+          setStyle({ ...style, color: "red" });
+          setMessage(error.response.data.error);
+        });
+      });
   };
 
   const updateName = (e) => {
@@ -93,22 +112,25 @@ const App = () => {
   let contactsToRender = !query ? [...persons] : [...personsFound];
 
   const handleDelete = (id) => {
-    const deletedPerson = persons.find((person) => person.id === id).name;
-    if (window.confirm("Delete " + deletedPerson + " ?")) {
-      (async () => {
-        try {
-          const data = await updatePhoneBook.deleteContact(id);
-          setPersons(persons.filter((person) => deletedPerson !== person.name));
-        } catch {
-          updateNotification(() => {
-            setStyle({ ...style, color: "red" });
-            setMessage(`Information of ${deletedPerson} has already been removed from the server`);
-          });
-          setPersons(persons.filter((person) => deletedPerson !== person.name));
-        }
-      })();
-    }
+    const deletedPerson = persons.find((person) => person.id === id);
+    if (window.confirm(`Delete ${deletedPerson.name}?`)) deleteCreatedPerson(deletedPerson);
   };
+
+  const deleteCreatedPerson = (deletedPerson) => {
+    updatePhoneBook
+      .deleteContact(deletedPerson.id)
+      .then(() => {
+        setPersons(persons.filter((person) => deletedPerson.name !== person.name));
+      })
+      .catch((error) => {
+        updateNotification(() => {
+          setStyle({ ...style, color: "red" });
+          setMessage(error.response.data.error);
+          setPersons(persons.filter((person) => deletedPerson.name !== person.name));
+        });
+      });
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
