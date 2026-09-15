@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(middleware.requestLogger);
 
-app.use('/api/notes', blogRouter);
+app.use('/api/blogs', blogRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
