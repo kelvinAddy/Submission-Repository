@@ -1,4 +1,5 @@
 const blogs = require('../../Tests/blogs.data');
+const Blog = require('../Models/blog.model');
 
 const getMaxElement = (accum, currentVal) => {
   return accum.likes > currentVal.likes ? accum : currentVal;
@@ -55,11 +56,17 @@ const mostLikes = (blogs) => {
   return authorLikeCount.reduce(getMaxElement);
 };
 
+const blogsInDb = async () => {
+  const data = await Blog.find({});
+  return data.map((blog) => blog.toJSON());
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
   mostLikes,
+  blogsInDb,
   blogs,
 };
