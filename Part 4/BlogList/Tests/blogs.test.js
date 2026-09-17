@@ -4,8 +4,7 @@ const listhelper = require('../App/Utils/list.helper');
 const blogs = require('./blogs.data');
 
 test('dummy returns one', () => {
-  const blogs = [];
-  const results = listhelper.dummy(blogs);
+  const results = listhelper.dummy([]);
   assert.strictEqual(results, 1);
 });
 
