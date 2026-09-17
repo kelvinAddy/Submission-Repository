@@ -6,7 +6,7 @@ exports.getBlogs = (req, res) => {
   });
 };
 
-exports.addBlog = (req, res) => {
+exports.postBlog = (req, res) => {
   const blog = new Blog(req.body);
 
   blog.save().then((result) => {
