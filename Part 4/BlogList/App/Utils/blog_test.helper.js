@@ -55,4 +55,11 @@ const mostLikes = (blogs) => {
   return authorLikeCount.reduce(getMaxElement);
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };
+module.exports = {
+  dummy,
+  totalLikes,
+  favoriteBlog,
+  mostBlogs,
+  mostLikes,
+  blogs,
+};
