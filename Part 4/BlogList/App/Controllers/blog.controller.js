@@ -1,9 +1,22 @@
 const Blog = require('../Models/blog.model');
-const User = require('../Models/user.model');
 
 exports.getBlogs = async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, _id: 1 });
+  const blogs = await Blog.find().populate('user', {
+    username: 1,
+    _id: 1,
+  });
   res.json(blogs);
+};
+
+exports.getBlogsById = async (req, res) => {
+  const blog = await Blog.findById(req?.params?.id).populate('user', {
+    username: 1,
+    _id: 1,
+  });
+
+  if (!blog) return res.status(404).json({ error: 'Blog was not found' });
+
+  return res.json(blog);
 };
 
 exports.postBlog = async (req, res) => {
