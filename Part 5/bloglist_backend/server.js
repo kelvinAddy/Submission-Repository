@@ -10,4 +10,4 @@ connectToDb()
       logger.info(`Server is running on PORT ${config.PORT}`);
     });
   })
-  .catch((error) => logger.error('Error was encountered', error.message));
+  .catch((error) => logger.error('Error was encountered'));
