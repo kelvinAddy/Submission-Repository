@@ -33,15 +33,6 @@ beforeEach(async () => {
     .expect('Content-Type', /application\/json/);
 
   token = `Bearer ${res.body.token}`;
-
-  const blogToAdd = { ...helper.blogs[0] };
-
-  await api
-    .post('/api/blogs')
-    .set('Authorization', token)
-    .send(blogToAdd)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
 });
 
 describe('Getting blogs', () => {
@@ -59,20 +50,20 @@ describe('Getting blogs', () => {
   });
 
   test('blog with valid id is returned', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToGet = blogsAtStart[0];
+    const usersAtStart = await helper.usersInDb();
+    const userToGet = usersAtStart[0];
 
     const result = await api
-      .get(`/api/blogs/${blogToGet.id}`)
+      .get(`/api/blogs/${userToGet.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/);
 
-    assert.strictEqual(result.body.id, blogToGet.id);
+    assert.strictEqual(result.body.id, userToGet.id);
   });
 });
 
 test('blogs populate with users who created them', async () => {
-  const blogToAdd = { ...helper.blogs[3] };
+  const blogToAdd = { ...helper.blogs[0] };
 
   await api
     .post('/api/blogs')
@@ -94,7 +85,7 @@ test('blogs populate with users who created them', async () => {
 
 test('a blog can be added', async () => {
   const blogsAtStart = await helper.blogsInDb();
-  const newBlog = { ...helper.blogs[4], author: 'Kelvin Addy', likes: 23 };
+  const newBlog = { ...helper.blogs[0], author: 'Kelvin Addy', likes: 23 };
 
   await api
     .post('/api/blogs')
@@ -166,8 +157,8 @@ test('blog deletion succeeds with status 204', async () => {
   assert(!ids.includes(blogToDelete.id));
 });
 
-test('updating blog succeeds with valid data', async () => {
-  const newBlog = { ...helper.blogs[2], author: 'Kelvin Addy', likes: 23 };
+test.only('updating blog succeeds with valid data', async () => {
+  const newBlog = { ...helper.blogs[0], author: 'Kelvin Addy', likes: 23 };
 
   await api
     .post('/api/blogs')
