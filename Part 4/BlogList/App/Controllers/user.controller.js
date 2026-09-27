@@ -9,6 +9,16 @@ exports.get = async (req, res) => {
   res.json(data);
 };
 
+exports.getById = async (req, res) => {
+  const data = await User.findById(req?.params?.id).populate('blogs', {
+    likes: 0,
+    user: 0,
+  });
+
+  if (!data) return res.status(404).json({ error: 'Could not find user' });
+  res.json(data);
+};
+
 exports.post = async (req, res) => {
   if (!req?.body?.username || !req?.body?.password) {
     return res.status(400).json({ error: 'Username or password is missing' });
