@@ -1,9 +1,7 @@
 const Blog = require('../Models/blog.model');
-const User = require('../Models/user.model');
 
 exports.getBlogs = async (req, res) => {
-  const user = req.user;
-  const blogs = await Blog.find({ user }).populate('user', {
+  const blogs = await Blog.find({}).populate('user', {
     username: 1,
     _id: 1,
   });
@@ -11,7 +9,6 @@ exports.getBlogs = async (req, res) => {
 };
 
 exports.getBlogsById = async (req, res) => {
-  const user = req.user;
   const blog = await Blog.findById(req?.params?.id).populate('user', {
     username: 1,
     _id: 1,

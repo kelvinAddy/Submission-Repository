@@ -8,7 +8,6 @@ const getToken = (req, res, next) => {
   if (authorization && authorization.startsWith('Bearer')) {
     req.token = authorization.replace('Bearer ', '');
   }
-
   next();
 };
 
