@@ -4,8 +4,11 @@ const baseUrl = '/api/blogs'
 
 const extractToken = () => {
   const userJSON = window.localStorage.getItem('loggedInUser')
+
+  if (!userJSON) return null
+
   const userObj = JSON.parse(userJSON)
-  const token = userObj?.token ? `Bearer ${userObj.token}` : null
+  const token = `Bearer ${userObj.token}`
   return token
 }
 
